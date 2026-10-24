@@ -1,0 +1,66 @@
+name: Vallkey key scan
+description: Fail the build when an API key is committed. Each key is marked on its line, masked, and listed in the run summary.
+author: Vallkey
+branding:
+  icon: shield
+  color: purple
+
+inputs:
+  path:
+    description: The folder to scan, relative to the repository root.
+    default: .
+  history:
+    description: Also scan every commit in the git history. Needs fetch-depth 0 on actions/checkout.
+    default: "false"
+  fail:
+    description: Fail the job when keys are found. Set to false to only report them.
+    default: "true"
+  version:
+    description: The version of the vallkey command line tool to run.
+    default: 0.3.1
+
+outputs:
+  found:
+    description: How many API keys were found.
+    value: ${{ steps.scan.outputs.found }}
+
+runs:
+  using: composite
+  steps:
+    - id: scan
+      shell: bash
+      env:
+        VALLKEY_PATH: ${{ inputs.path }}
+        VALLKEY_HISTORY: ${{ inputs.history }}
+        VALLKEY_FAIL: ${{ inputs.fail }}
+        VALLKEY_VERSION: ${{ inputs.version }}
+      run: |
+        set -uo pipefail
+        if ! command -v npx >/dev/null; then
+          echo "::error title=Vallkey::Node.js is needed. Add actions/setup-node before this step."
+          exit 1
+        fi
+        if [[ ! "$VALLKEY_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "::error title=Vallkey::version must look like 1.2.3"
+          exit 1
+        fi
+        args=(scan)
+        if [ "$VALLKEY_HISTORY" = "true" ]; then
+          if [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = "true" ]; then
+            echo "::warning title=Vallkey::The checkout is shallow, so only part of the history is scanned. Set fetch-depth: 0 on actions/checkout."
+          fi
+          args+=(--history)
+        fi
+        args+=(-- "$VALLKEY_PATH")
+        report="$RUNNER_TEMP/vallkey-scan.txt"
+        npx --yes "vallkey@$VALLKEY_VERSION" "${args[@]}" | tee "$report"
+        code=${PIPESTATUS[0]}
+        found=$(grep -cE '^::(error|warning) file=' "$report" || true)
+        echo "found=$found" >> "$GITHUB_OUTPUT"
+        if [ "$code" -ne 0 ] && [ "$found" -eq 0 ]; then
+          exit "$code" # the scan itself failed
+        fi
+        if [ "$found" -gt 0 ] && [ "$VALLKEY_FAIL" = "true" ]; then
+          exit 1
+        fi
+        exit 0
