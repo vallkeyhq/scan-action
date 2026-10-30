@@ -11,13 +11,13 @@ inputs:
     default: .
   history:
     description: Also scan every commit in the git history. Needs fetch-depth 0 on actions/checkout.
-    default: "false"
+    default: 'false'
   fail:
     description: Fail the job when keys are found. Set to false to only report them.
-    default: "true"
+    default: 'true'
   allowlist:
     description: Optional repository-relative JSON file containing exact path and value-hash exceptions.
-    default: ""
+    default: ''
   version:
     description: The version of the vallkey command line tool to run.
     default: 0.8.1

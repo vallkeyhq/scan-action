@@ -1,3 +1,9 @@
+![Vallkey key scan](assets/cover.png)
+
+[![Checks](https://github.com/vallkeyhq/scan-action/actions/workflows/checks.yml/badge.svg)](https://github.com/vallkeyhq/scan-action/actions/workflows/checks.yml)
+[![Secret scan](https://github.com/vallkeyhq/scan-action/actions/workflows/secrets.yml/badge.svg)](https://github.com/vallkeyhq/scan-action/actions/workflows/secrets.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-968bff)](LICENSE)
+
 # Vallkey key scan
 
 Scan a GitHub checkout for recognizable API keys using the [Vallkey CLI](https://www.npmjs.com/package/vallkey). Findings produce masked line annotations and a job summary. No Vallkey account or API token is required for scanning.
@@ -30,13 +36,13 @@ For an immutable workflow, replace this action’s `@v1` reference with the full
 
 ## Inputs and outputs
 
-| Input | Default | Behavior |
-| --- | --- | --- |
-| `path` | `.` | Folder or file to scan, relative to the working directory |
-| `history` | `false` | Scan the checked-out Git history; use `fetch-depth: 0` for complete history |
-| `fail` | `true` | Fail on findings; `false` reports findings while operational errors still fail |
-| `allowlist` | Empty | Optional JSON file of exact path, SHA-256 value digest and reason exceptions |
-| `version` | `0.8.1` | Exact stable version of the `vallkey` npm package |
+| Input       | Default | Behavior                                                                       |
+| ----------- | ------- | ------------------------------------------------------------------------------ |
+| `path`      | `.`     | Folder or file to scan, relative to the working directory                      |
+| `history`   | `false` | Scan the checked-out Git history; use `fetch-depth: 0` for complete history    |
+| `fail`      | `true`  | Fail on findings; `false` reports findings while operational errors still fail |
+| `allowlist` | Empty   | Optional JSON file of exact path, SHA-256 value digest and reason exceptions   |
+| `version`   | `0.8.1` | Exact stable version of the `vallkey` npm package                              |
 
 `found` is the number of finding annotations emitted by the scanner. `history` and `fail` accept only `true` or `false`. Paths are passed as arguments, not executed as shell code.
 
@@ -55,7 +61,9 @@ Revoke or rotate it at the provider, inspect its usage, and remove it from the c
 ## Development
 
 ```sh
-node --test test/*.test.mjs
+npm ci
+npm run typecheck
+npm test
 ```
 
 Tests execute the actual composite-action shell with a local scanner stub, without installing npm packages or contacting provider APIs. See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and [LICENSE](LICENSE).

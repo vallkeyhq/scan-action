@@ -17,4 +17,7 @@ jobs:
         with:
           node-version: '22'
           package-manager-cache: false
-      - run: node --test test/*.test.mjs
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run format:check
