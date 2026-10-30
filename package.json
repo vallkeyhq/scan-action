@@ -12,6 +12,6 @@
     "@types/node": "18.19.130",
     "prettier": "3.6.2",
     "tsx": "4.23.15",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   }
 }
