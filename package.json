@@ -1,0 +1,17 @@
+{
+  "name": "vallkey-scan-action",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@types/node": "18.19.130",
+    "prettier": "3.6.2",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}
