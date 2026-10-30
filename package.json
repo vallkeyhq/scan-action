@@ -9,7 +9,7 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
-    "@types/node": "18.19.130",
+    "@types/node": "26.6.5",
     "prettier": "3.6.2",
     "tsx": "4.23.15",
     "typescript": "5.9.3"
